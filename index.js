@@ -21,11 +21,12 @@ io.on('connection', function(socket){
 
   socket.on('chat message', function(msg){
     if(users[socket.id]){
-      io.emit('chat message',"(user: " + users[socket.id]+")  " + msg);
-
-    }else{
-      socket.broadcast.emit('chat message', msg);
-  }
+      // io.emit('chat message',"(user: " + users[socket.id]+")  " + msg);
+      socket.broadcast.emit('chat message',"(user: " + users[socket.id]+")  " + msg);
+    }
+  //   }else{
+  //     socket.broadcast.emit('chat message', msg);
+  // }
   });
 
   socket.on("login", (msg) => {
@@ -35,7 +36,6 @@ io.on('connection', function(socket){
       })
 
     socket.on('disconnect', () => {
-      console.log("YAYAYAYAYAYA")
       io.sockets.emit('userConnection', io.engine.clientsCount)
       delete users[socket.id]
       io.sockets.emit("userlist", users)

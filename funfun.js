@@ -17,13 +17,14 @@
 
     if(user==$('#username').text()){
       alert("Send a message to yourself? I think not... if someone has your username already, simply change it and submit please")
-      return
+      return false
     }
       if(user && user!==$('#login').val()){
         const payload = {user,message:messageText}
         socket.emit('private', payload)
       }else{
-
+        $('#messages').append($('<li>').text(`(user: ${$('#username').text()} )${$('#m').val()}`));
+        window.scrollTo(0, document.body.scrollHeight);
     socket.emit('chat message', messageText);
     $('#m').val('');
   }
