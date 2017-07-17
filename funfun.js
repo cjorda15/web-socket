@@ -1,35 +1,35 @@
 
-  var socket = io();
+var socket = io();
 
-  $('form').submit(function(e){
-    const messageText = $('#m').val()
-    const user = $('#user-selection').val()
+$('form').submit(function(e){
+  const messageText = $('#m').val()
+  const user = $('#user-selection').val()
 
-    if(!$('#username').text()){
-      alert("please log in to send messages")
-      return false
-    }
-
-    if(!messageText){
-      alert("maybe when you send a message, insert a message next time silly bear")
-      return false
-    }
-
-    if(user==$('#username').text()){
-      alert("Send a message to yourself? I think not... if someone has your username already, simply change it and submit please")
-      return false
-    }
-      if(user && user!==$('#login').val()){
-        const payload = {user,message:messageText}
-        socket.emit('private', payload)
-      }else{
-        $('#messages').append($('<li>').text(`(user: ${$('#username').text()} )${$('#m').val()}`));
-        window.scrollTo(0, document.body.scrollHeight);
-    socket.emit('chat message', messageText);
-    $('#m').val('');
+  if(!$('#username').text()){
+    alert("please log in to send messages")
+    return false
   }
+
+  if(!messageText){
+    alert("maybe when you send a message, insert a message next time silly bear")
+    return false
+  }
+
+  if(user==$('#username').text()){
+    alert("Send a message to yourself? I think not... if someone has your username already, simply change it and submit please")
+    return false
+  }
+    if(user && user!==$('#login').val()){
+      const payload = {user,message:messageText}
+      socket.emit('private', payload)
+    }else{
+      $('#messages').append($('<li>').text(`(user: ${$('#username').text()} )${$('#m').val()}`));
+      window.scrollTo(0, document.body.scrollHeight);
+      socket.emit('chat message', messageText);
+  $('#m').val('');
+    }
     return false;
-  });
+});
 
 $('#login-btn').on('click',() => {
   const username = $('#login').val()
@@ -63,8 +63,7 @@ socket.on('private message', (msg) => {
   });
 
   socket.on('userConnection', (msg) => {
-    console.log(msg,"update user list");
-      $('#user-total').empty()
+    $('#user-total').empty()
     $('#user-total').append($('<h6>').text("Total connected: "+msg))
   })
 

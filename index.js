@@ -20,43 +20,36 @@ io.on('connection', function(socket){
 
 
   socket.on('chat message', function(msg){
-    if(users[socket.id]){
-      // io.emit('chat message',"(user: " + users[socket.id]+")  " + msg);
       socket.broadcast.emit('chat message',"(user: " + users[socket.id]+")  " + msg);
-    }
-  //   }else{
-  //     socket.broadcast.emit('chat message', msg);
-  // }
   });
 
   socket.on("login", (msg) => {
     users[socket.id] = msg
     invertedUsers[msg]= socket.id
     io.sockets.emit("userlist", users)
-      })
+  })
 
-    socket.on('disconnect', () => {
-      io.sockets.emit('userConnection', io.engine.clientsCount)
-      delete users[socket.id]
-      io.sockets.emit("userlist", users)
-      })
-
-    socket.on('user typing', () => {
-      io.sockets.emit('typing',users[socket.id])
+  socket.on('disconnect', () => {
+    io.sockets.emit('userConnection', io.engine.clientsCount)
+    delete users[socket.id]
+    io.sockets.emit("userlist", users)
     })
 
-    socket.on('private', (msg) => {
-      if(!invertedUsers[msg.user]){
-        io.sockets.connected[socket.id].emit("errors")
-        return
-      }
-      io.sockets.connected[invertedUsers[msg.user]]
-      .emit("private message",`(Private message from ${users[socket.id]})  ${msg.message}`)
+  socket.on('user typing', () => {
+    io.sockets.emit('typing',users[socket.id])
+  })
 
-      io.sockets.connected[socket.id].emit("private message",`(Private message to ${msg.user})  ${msg.message}`)
+  socket.on('private', (msg) => {
+    if(!invertedUsers[msg.user]){
+      io.sockets.connected[socket.id].emit("errors")
+      return
+    }
+  io.sockets.connected[invertedUsers[msg.user]]
+  .emit("private message",`(Private message from ${users[socket.id]})  ${msg.message}`)
 
-    })
+  io.sockets.connected[socket.id].emit("private message",`(Private message to ${msg.user})  ${msg.message}`)
 
+  })
 });
 
 http.listen(port, function(){
